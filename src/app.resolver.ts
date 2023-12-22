@@ -1,9 +1,33 @@
-import { Resolver, Query } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Author } from './schemas/author.schema';
+import { AppService } from './app.service';
+import { InputType, Field } from '@nestjs/graphql';
 
-@Resolver()
+@InputType()
+export class AuthorInput {
+  @Field()
+  name: string;
+
+  @Field()
+  age: number;
+}
+
+@Resolver((of) => Author)
 export class AppResolver {
-  @Query(() => String)
-  hello(): string {
-    return 'Hello world GraphQL';
+  constructor(private readonly authorService: AppService) {}
+
+  @Query(() => [Author])
+  async authors(): Promise<Author[]> {
+    return this.authorService.getAllAuthors();
+  }
+
+  @Query(() => Author)
+  async author(@Args('id') id: string): Promise<Author> {
+    return this.authorService.getAuthorById(id);
+  }
+
+  @Mutation(() => Author)
+  async createAuthor(@Args('input') authorInput: AuthorInput): Promise<Author> {
+    return this.authorService.createAuthor(authorInput);
   }
 }
