@@ -33,3 +33,9 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Team
+
+Developed by Diego Cortés
+
+- dcortes.net@gmail.com
